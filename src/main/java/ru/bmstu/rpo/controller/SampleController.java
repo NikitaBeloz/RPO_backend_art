@@ -2,15 +2,12 @@ package ru.bmstu.rpo.controller;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.service.CountryService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @RestController

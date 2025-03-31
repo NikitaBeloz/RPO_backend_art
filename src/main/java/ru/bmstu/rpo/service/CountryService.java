@@ -25,6 +25,10 @@ public class CountryService {
         return countryRepository.findAll();
     }
 
+    public Optional<Country> findById(Long id){
+        return countryRepository.findById(id);
+    }
+
     public ResponseEntity<Object> createCountry(Country country) {
         try {
             Country nc = countryRepository.save(country);
@@ -42,11 +46,9 @@ public class CountryService {
     }
 
     public ResponseEntity<Country> updateCountry(Long countryId, Country countryDetails){
-        Country country;
         Optional<Country> cc = countryRepository.findById(countryId);
         if (cc.isPresent()) {
-            country = cc.get();
-            country.name = countryDetails.name;
+            Country country = entityForUpdate(countryId, countryDetails);
             countryRepository.save(country);
             return ResponseEntity.ok(country);
         } else {
@@ -64,5 +66,12 @@ public class CountryService {
         else
             resp.put("deleted", Boolean.FALSE);
         return ResponseEntity.ok(resp);
+    }
+
+    private Country entityForUpdate(Long countryId, Country countryDetails){
+        Optional<Country> cc = countryRepository.findById(countryId);
+        Country country = cc.get();
+        country.name = countryDetails.name;
+        return country;
     }
 }
