@@ -5,6 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.bmstu.rpo.entity.Country;
 
 @Repository
-public interface CountryRepository  extends JpaRepository<Country, Long>
-{
+public interface CountryRepository extends JpaRepository<Country, Long> {
 }
