@@ -8,17 +8,20 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "countries")
-public class Country {
+@Table(name = "museum")
+public class Museum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     public long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, length = 128)
     public String name;
 
-    @OneToMany(mappedBy = "country")
-    public List artists = new ArrayList();
+    @Column(name = "location", nullable = false, length = 128)
+    public String location;
+
+    @OneToMany(mappedBy = "museum")
+    public List paintings = new ArrayList();
 }
