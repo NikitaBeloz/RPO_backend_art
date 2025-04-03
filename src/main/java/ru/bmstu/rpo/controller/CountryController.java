@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.service.CountryService;
 
@@ -35,6 +36,11 @@ public class CountryController {
     @PostMapping("/delete/{id}")
     public ResponseEntity<Object> deleteCountry(@PathVariable(value = "id") Long countryId) {
         return countryService.deleteCountry(countryId);
+    }
+
+    @GetMapping("/{id}/artists")
+    public ResponseEntity<List<Artist>> getCountryArtists(@PathVariable(value = "id") Long countryId) {
+        return countryService.getCountryArtists(countryId);
     }
 }
 

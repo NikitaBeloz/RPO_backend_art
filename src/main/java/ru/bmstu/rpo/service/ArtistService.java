@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Country;
+import ru.bmstu.rpo.entity.Painting;
 import ru.bmstu.rpo.repository.ArtistRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Data
@@ -81,5 +79,13 @@ public class ArtistService {
         Optional<Country> country = countryService.findById(artistDetails.country.id);
         country.ifPresent(c -> artist.country = c);
         return artist;
+    }
+
+    public ResponseEntity<List<Painting>> getArtistPainting(Long artistId) {
+        Optional<Artist> cc = artistRepository.findById(artistId);
+        if (cc.isPresent()) {
+            return ResponseEntity.ok(cc.get().paintings);
+        }
+        return ResponseEntity.ok(new ArrayList<>());
     }
 }

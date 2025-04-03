@@ -7,12 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bmstu.rpo.entity.Museum;
+import ru.bmstu.rpo.entity.Painting;
 import ru.bmstu.rpo.repository.MuseumRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Data
@@ -71,5 +69,13 @@ public class MuseumService {
         museum.name = museumDetails.name;
         museum.location = museumDetails.location;
         return museum;
+    }
+
+    public ResponseEntity<List<Painting>> getMuseumPainting(Long museumId) {
+        Optional<Museum> cc = museumRepository.findById(museumId);
+        if (cc.isPresent()) {
+            return ResponseEntity.ok(cc.get().paintings);
+        }
+        return ResponseEntity.ok(new ArrayList<>());
     }
 }

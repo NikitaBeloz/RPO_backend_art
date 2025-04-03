@@ -6,13 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.repository.CountryRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Data
@@ -73,5 +71,13 @@ public class CountryService {
         Country country = cc.get();
         country.name = countryDetails.name;
         return country;
+    }
+
+    public ResponseEntity<List<Artist>> getCountryArtists(Long countryId) {
+        Optional<Country> cc = countryRepository.findById(countryId);
+        if (cc.isPresent()) {
+            return ResponseEntity.ok(cc.get().artists);
+        }
+        return ResponseEntity.ok(new ArrayList<>());
     }
 }
