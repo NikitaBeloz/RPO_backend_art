@@ -1,5 +1,6 @@
 package ru.bmstu.rpo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Museum {
     @Column(name = "location", nullable = false, length = 128)
     public String location;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "museum")
-    public List paintings = new ArrayList();
+    public List<Painting> paintings = new ArrayList<>();
 }

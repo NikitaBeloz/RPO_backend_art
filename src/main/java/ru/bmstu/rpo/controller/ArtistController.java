@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bmstu.rpo.entity.Artist;
-import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.service.ArtistService;
-import ru.bmstu.rpo.service.CountryService;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package ru.bmstu.rpo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class Country {
     @Column(name = "name", nullable = false, unique = true)
     public String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "country")
-    public List artists = new ArrayList();
+    public List<Artist> artists = new ArrayList<>();
 }
