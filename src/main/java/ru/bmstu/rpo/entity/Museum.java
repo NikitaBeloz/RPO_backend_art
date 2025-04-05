@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -26,4 +28,10 @@ public class Museum {
     @JsonIgnore
     @OneToMany(mappedBy = "museum")
     public List<Painting> paintings = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "usersmuseums", joinColumns = @JoinColumn(name = "museum_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    public Set<Users> users = new HashSet<>();
 }
