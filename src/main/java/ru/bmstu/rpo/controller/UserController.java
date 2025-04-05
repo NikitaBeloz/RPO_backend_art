@@ -1,5 +1,6 @@
 package ru.bmstu.rpo.controller;
 
+import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,15 @@ public class UserController {
     @GetMapping("/{id}/paintings")
     public ResponseEntity<Set<Museum>> getArtistPainting(@PathVariable(value = "id") Long usersId) {
         return userService.getUsersMuseum(usersId);
+    }
+
+    @PostMapping("/{id}/addmuseums")
+    public ResponseEntity<Object> addMuseums(@PathVariable(value = "id") Long userId, @Valid @RequestBody Set<Museum> museums) {
+        return ResponseEntity.ok(userService.addMuseums(userId, museums));
+    }
+
+    @PostMapping("/{id}/removemuseums")
+    public ResponseEntity<Object> removeMuseums(@PathVariable(value = "id") Long userId, @Valid @RequestBody Set<Museum> museums) {
+        return ResponseEntity.ok(userService.removeMuseums(userId, museums));
     }
 }

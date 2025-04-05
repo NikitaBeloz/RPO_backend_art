@@ -19,6 +19,9 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    MuseumService museumService;
+
     public List findAllUsers() {
         return userRepository.findAll();
     }
@@ -79,5 +82,40 @@ public class UserService {
             return ResponseEntity.ok(cc.get().museums);
         }
         return ResponseEntity.ok( new HashSet<>());
+    }
+
+    public ResponseEntity<Object> addMuseums(Long userId, Set<Museum> museums) {
+        Optional<Users> uu = userRepository.findById(userId);
+        int cnt = 0;
+        if (uu.isPresent()) {
+            Users u = uu.get();
+            for (Museum m : museums) {
+                Optional<Museum> mm = museumService.findById(m.id);
+                if (mm.isPresent()) {
+                    u.addMuseum(mm.get());
+                    cnt++;
+                }
+            }
+            userRepository.save(u);
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("count", String.valueOf(cnt));
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<Object> removeMuseums(Long userId, Set<Museum> museums) {
+        Optional<Users> uu = userRepository.findById(userId);
+        int cnt = 0;
+        if (uu.isPresent()) {
+            Users u = uu.get();
+            for (Museum m : u.museums) {
+                u.removeMuseum(m);
+                cnt++;
+            }
+            userRepository.save(u);
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("count", String.valueOf(cnt));
+        return ResponseEntity.ok(response);
     }
 }

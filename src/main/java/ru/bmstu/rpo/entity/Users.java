@@ -40,4 +40,14 @@ public class Users {
 
     @ManyToMany(mappedBy = "users")
     public Set<Museum> museums = new HashSet<>();
+
+    public void addMuseum(Museum m) {
+        this.museums.add(m);
+        m.users.add(this);
+    }
+
+    public void removeMuseum(Museum m) {
+        this.museums.remove(m);
+        m.users.remove(this);
+    }
 }
