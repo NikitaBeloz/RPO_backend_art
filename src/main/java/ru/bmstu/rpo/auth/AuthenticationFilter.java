@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.Request;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -25,16 +27,18 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
-
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader("Authorization");
         if (token != null) {
             token = StringUtils.removeStart(token, "Bearer").trim();
+            System.out.println("Extracted token: " + token);
+
+            // Передаем токен как credentials
+            return getAuthenticationManager().authenticate(
+                    new UsernamePasswordAuthenticationToken(null, token)
+            );
         }
-        UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(token, null);
-        return getAuthenticationManager().authenticate(authRequest);
+        throw new AuthenticationCredentialsNotFoundException("Token not found");
     }
 
     @Override

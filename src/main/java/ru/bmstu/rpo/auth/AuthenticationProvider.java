@@ -36,7 +36,7 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
             throws AuthenticationException {
 
         Object token = usernamePasswordAuthenticationToken.getCredentials();
-        Optional<ru.bmstu.rpo.entity.Users> uu = userRepository.findByToken(String.valueOf(token));
+            Optional<ru.bmstu.rpo.entity.Users> uu = userRepository.findByToken(String.valueOf(token));
         if (!uu.isPresent())
             throw new UsernameNotFoundException("user is not found");
         ru.bmstu.rpo.entity.Users u = uu.get();

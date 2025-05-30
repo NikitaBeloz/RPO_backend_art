@@ -25,7 +25,7 @@ public class CountryController {
     @Autowired
     CountryService countryService;
 
-    @GetMapping
+    @GetMapping("/")
     public List findAllCountries() {
         return countryService.findAllCountries();
     }
