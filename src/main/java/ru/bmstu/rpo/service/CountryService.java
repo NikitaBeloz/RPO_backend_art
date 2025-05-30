@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.repository.CountryRepository;
+import ru.bmstu.rpo.tools.DataValidationException;
 
 import java.util.*;
 
@@ -79,5 +80,41 @@ public class CountryService {
             return ResponseEntity.ok(cc.get().artists);
         }
         return ResponseEntity.ok(new ArrayList<>());
+    }
+
+    public ResponseEntity<Object> createCountryRest(Country country) throws DataValidationException {
+        try {
+            Country nc = countryRepository.save(country);
+            return new ResponseEntity<Object>(nc, HttpStatus.OK);
+        }
+        catch(Exception ex) {
+            String error;
+            if (ex.getMessage().contains("countries.name_UNIQUE"))
+                throw new DataValidationException("Эта страна уже есть в базе");
+            else
+                throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity<Country> updateCountryRest(Long countryId, Country countryDetails) throws DataValidationException {
+        try {
+            Country country = countryRepository.findById(countryId)
+                    .orElseThrow(() -> new DataValidationException("Страна с таким индексом не найдена"));
+            country.name = countryDetails.name;
+            countryRepository.save(country);
+            return ResponseEntity.ok(country);
+        }
+        catch (Exception ex) {
+            String error;
+            if (ex.getMessage().contains("countries.name_UNIQUE"))
+                throw new DataValidationException("Эта страна уже есть в базе");
+            else
+                throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity deleteCountriesRest(List<Country> countries) {
+        countryRepository.deleteAll(countries);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

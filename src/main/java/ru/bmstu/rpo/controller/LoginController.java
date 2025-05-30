@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/auth")
 public class LoginController {
     @Autowired
     private UserRepository userRepository;

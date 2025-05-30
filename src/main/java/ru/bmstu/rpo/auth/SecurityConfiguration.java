@@ -59,6 +59,10 @@ public class SecurityConfiguration {
     public AuthenticationFilter authenticationFilter(AuthenticationManager authenticationManager) {
         AuthenticationFilter filter = new AuthenticationFilter(PROTECTED_URLs);
         filter.setAuthenticationManager(authenticationManager);
+        filter.setAuthenticationSuccessHandler((request, response, authentication) -> {
+            // Пустой success handler - просто продолжает цепочку фильтров
+            // без перенаправления или изменения ответа
+        });
         return filter;
     }
 }

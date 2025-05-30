@@ -10,15 +10,16 @@ import ru.bmstu.rpo.service.MuseumService;
 
 import java.util.List;
 
+@RequestMapping("/api/v1/museums")
+@CrossOrigin(origins = "http://localhost:3000")
 @Data
 @RestController
-@RequestMapping("/api/v1/museums")
 public class MuseumController {
 
     @Autowired
     MuseumService museumService;
 
-    @GetMapping("/")
+    @GetMapping
     public List findAllMuseums() {
         return museumService.findAllMuseums();
     }

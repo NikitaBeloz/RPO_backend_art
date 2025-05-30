@@ -9,15 +9,16 @@ import ru.bmstu.rpo.service.PaintingService;
 
 import java.util.List;
 
+@RequestMapping("/api/v1/paintings")
+@CrossOrigin(origins = "http://localhost:3000")
 @Data
 @RestController
-@RequestMapping("/api/v1/paintings")
 public class PaintingController {
 
     @Autowired
     PaintingService paintingService;
 
-    @GetMapping("/")
+    @GetMapping
     public List findAllPainting() {
         return paintingService.findAllPainting();
     }

@@ -12,15 +12,16 @@ import ru.bmstu.rpo.service.UserService;
 import java.util.List;
 import java.util.Set;
 
+@RequestMapping("/api/v1/users")
+@CrossOrigin(origins = "http://localhost:3000")
 @Data
 @RestController
-@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public List findAllArtists() {
         return userService.findAllUsers();
     }

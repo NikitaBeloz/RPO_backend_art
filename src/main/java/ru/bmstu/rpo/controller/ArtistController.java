@@ -10,15 +10,16 @@ import ru.bmstu.rpo.service.ArtistService;
 
 import java.util.List;
 
+@RequestMapping("/api/v1/artists")
+@CrossOrigin(origins = "http://localhost:3000")
 @Data
 @RestController
-@RequestMapping("/api/v1/artists")
 public class ArtistController {
 
     @Autowired
     ArtistService artistService;
 
-    @GetMapping("/")
+    @GetMapping(("/"))
     public List findAllArtists() {
         return artistService.findAllArtists();
     }
