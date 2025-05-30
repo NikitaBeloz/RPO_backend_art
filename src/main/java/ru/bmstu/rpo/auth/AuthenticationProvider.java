@@ -37,10 +37,10 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
 
         Object token = usernamePasswordAuthenticationToken.getCredentials();
             Optional<ru.bmstu.rpo.entity.Users> uu = userRepository.findByToken(String.valueOf(token));
+        System.out.println(token);
         if (!uu.isPresent())
             throw new UsernameNotFoundException("user is not found");
         ru.bmstu.rpo.entity.Users u = uu.get();
-
         boolean timeout = true;
         LocalDateTime dt  = LocalDateTime.now();
         if (u.activity != null) {

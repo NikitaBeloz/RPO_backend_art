@@ -31,8 +31,6 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
         String token = request.getHeader("Authorization");
         if (token != null) {
             token = StringUtils.removeStart(token, "Bearer").trim();
-            System.out.println("Extracted token: " + token);
-
             // Передаем токен как credentials
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(null, token)

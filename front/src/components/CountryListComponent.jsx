@@ -1,110 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
-import Alert from './Alert'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
+import Alert from './Alert';
 import BackendService from "../services/BackendService";
 import { useNavigate } from 'react-router-dom';
 
-const CountryListComponent = props => {
-
+const CountryListComponent = () => {
     const [message, setMessage] = useState();
     const [countries, setCountries] = useState([]);
     const [selectedCountries, setSelectedCountries] = useState([]);
-    const [show_alert, setShowAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
     const [hidden, setHidden] = useState(false);
     const navigate = useNavigate();
 
-    const setChecked = v =>  {
-        setCheckedItems(Array(countries.length).fill(v));
-    }
+    const setChecked = (value) => {
+        setCheckedItems(Array(countries.length).fill(value));
+    };
 
-    const handleCheckChange = e => {
+    const handleCheckChange = (e) => {
         const idx = e.target.name;
         const isChecked = e.target.checked;
-
-        let checkedCopy = [...checkedItems];
+        const checkedCopy = [...checkedItems];
         checkedCopy[idx] = isChecked;
         setCheckedItems(checkedCopy);
-    }
+    };
 
-    const handleGroupCheckChange = e => {
-        const isChecked = e.target.checked;
-        setChecked(isChecked);
-    }
+    const handleGroupCheckChange = (e) => {
+        setChecked(e.target.checked);
+    };
 
     const deleteCountriesClicked = () => {
-        let x = [];
-        countries.map ((t, idx) => {
-            if (checkedItems[idx]) {
-                x.push(t)
-            }
-            return 0
-        });
-        if (x.length > 0) {
-            var msg;
-            if (x.length > 1) {
-                msg = "Пожалуйста подтвердите удаление " + x.length + " стран";
-            }
-            else  {
-                msg = "Пожалуйста подтвердите удаление страны " + x[0].name;
-            }
+        const selected = countries.filter((_, idx) => checkedItems[idx]);
+        if (selected.length > 0) {
+            const msg = selected.length > 1
+                ? `Подтвердите удаление ${selected.length} стран`
+                : `Подтвердите удаление страны ${selected[0].name}`;
             setShowAlert(true);
-            setSelectedCountries(x);
+            setSelectedCountries(selected);
             setMessage(msg);
         }
-    }
+    };
 
     const refreshCountries = () => {
         BackendService.retrieveAllCountries()
-        .then(
-            resp => {
+            .then((resp) => {
                 setCountries(resp.data);
                 setHidden(false);
             })
-        .catch(()=> { setHidden(true )})
-        .finally(()=> setChecked(false))
-    }
+            .catch(() => setHidden(true))
+            .finally(() => setChecked(false));
+    };
 
     useEffect(() => {
         refreshCountries();
-    }, [])
+    }, []);
 
-    const updateCountryClicked = id => {
-        navigate(`/countries/${id}`)
-    }
+    const updateCountryClicked = (id) => {
+        navigate(`/countries/${id}`);
+    };
 
-    const onDelete = () =>  {
+    const onDelete = () => {
         BackendService.deleteCountries(selectedCountries)
-        .then( () => refreshCountries())
-        .catch(()=>{})
-    }
+            .then(() => refreshCountries())
+            .catch(console.error);
+    };
 
     const closeAlert = () => {
-        setShowAlert(false)
-    }
+        setShowAlert(false);
+    };
 
     const addCountryClicked = () => {
-        navigate(`/countries/-1`)
-    }
+        navigate('/countries/new');
+    };
 
-    if (hidden)
-        return null;
+    if (hidden) return null;
+
     return (
         <div className="m-4">
             <div className="row my-2">
                 <h3>Страны</h3>
                 <div className="btn-toolbar">
                     <div className="btn-group ms-auto">
-                        <button className="btn btn-outline-secondary"
-                            onClick={addCountryClicked}>
-                            <FontAwesomeIcon icon={faPlus} />{' '}Добавить
+                        <button className="btn btn-outline-secondary" onClick={addCountryClicked}>
+                            <FontAwesomeIcon icon={faPlus} /> Добавить
                         </button>
                     </div>
                     <div className="btn-group ms-2">
-                        <button className="btn btn-outline-secondary"
-                            onClick={deleteCountriesClicked}>
-                            <FontAwesomeIcon icon={faTrash} />{' '}Удалить
+                        <button className="btn btn-outline-secondary" onClick={deleteCountriesClicked}>
+                            <FontAwesomeIcon icon={faTrash} /> Удалить
                         </button>
                     </div>
                 </div>
@@ -116,7 +100,7 @@ const CountryListComponent = props => {
                             <th>Название</th>
                             <th>
                                 <div className="btn-toolbar pb-1">
-                                    <div className="btn-group  ms-auto">
+                                    <div className="btn-group ms-auto">
                                         <input type="checkbox" onChange={handleGroupCheckChange} />
                                     </div>
                                 </div>
@@ -124,40 +108,44 @@ const CountryListComponent = props => {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            countries && countries.map((country, index) =>
+                        {countries.map((country, index) => (
                             <tr key={country.id}>
                                 <td>{country.name}</td>
                                 <td>
                                     <div className="btn-toolbar">
-                                        <div className="btn-group  ms-auto">
-                                            <button className="btn btn-outline-secondary btn-sm btn-toolbar"
-                                                onClick={() =>
-                                                updateCountryClicked(country.id)}>
+                                        <div className="btn-group ms-auto">
+                                            <button
+                                                className="btn btn-outline-secondary btn-sm"
+                                                onClick={() => updateCountryClicked(country.id)}
+                                            >
                                                 <FontAwesomeIcon icon={faEdit} fixedWidth />
                                             </button>
                                         </div>
-                                        <div className="btn-group  ms-2  mt-1">
-                                            <input type="checkbox" name={index}
-                                                checked={checkedItems.length> index ?  checkedItems[index] : false}
-                                                onChange={handleCheckChange}/>
+                                        <div className="btn-group ms-2 mt-1">
+                                            <input
+                                                type="checkbox"
+                                                name={index}
+                                                checked={checkedItems[index] || false}
+                                                onChange={handleCheckChange}
+                                            />
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        )
-                        }
+                        ))}
                     </tbody>
                 </table>
             </div>
-            <Alert title="Удаление"
+            <Alert
+                title="Удаление"
                 message={message}
                 ok={onDelete}
                 close={closeAlert}
-                modal={show_alert}
-                cancelButton={true} />
+                modal={showAlert}
+                cancelButton={true}
+            />
         </div>
-    )
-}
+    );
+};
 
 export default CountryListComponent;
