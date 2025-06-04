@@ -49,7 +49,7 @@ class BackendService {
     /* Countries */
 
     retrieveAllCountries(page, limit) {
-        return axios.get(`${API_URL}/countries/`);
+        return axios.get(`${API_URL}/countries?page=${page}&limit=${limit}`);
     }
 
     retrieveCountry(id) {
@@ -66,6 +66,28 @@ class BackendService {
 
     deleteCountries(countries) {
         return axios.post(`${API_URL}/countries/deletecountries`, countries);
+    }
+
+    /* Artists */
+
+    retrieveAllArtists(page, limit) {
+        return axios.get(`${API_URL}/artists/`);
+    }
+
+    retrieveArtists(id) {
+        return axios.get(`${API_URL}/artists/${id}`);
+    }
+
+    createArtists(artist) {
+        return axios.post(`${API_URL}/artists/`, artist);
+    }
+
+    updateArtists(artist) {
+        return axios.put(`${API_URL}/artists/${artist.id}`, artist);
+    }
+
+    deleteArtists(artists) {
+        return axios.post(`${API_URL}/artists/deleteartists`, artists);
     }
 }
 

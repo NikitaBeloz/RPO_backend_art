@@ -2,16 +2,18 @@ package ru.bmstu.rpo.controller;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Painting;
 import ru.bmstu.rpo.service.ArtistService;
+import ru.bmstu.rpo.tools.DataValidationException;
 
 import java.util.List;
 
 @RequestMapping("/api/v1/artists")
-@CrossOrigin(origins = "http://localhost:3000")
 @Data
 @RestController
 public class ArtistController {
@@ -42,5 +44,27 @@ public class ArtistController {
     @GetMapping("/{id}/paintings")
     public ResponseEntity<List<Painting>> getArtistPainting(@PathVariable(value = "id") Long artistId) {
         return artistService.getArtistPainting(artistId);
+    }
+
+    @GetMapping("/{id}")
+    public HttpEntity<Artist> ResponseEntityGetArtist(@PathVariable(value = "id") Long artistId) throws DataValidationException {
+        Artist artist = artistService.findById(artistId)
+                .orElseThrow(()->new DataValidationException("Страна с таким индексом не найдена"));
+        return ResponseEntity.ok(artist);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<Object> createArtistRest(@Validated @RequestBody Artist artist) throws DataValidationException {
+        return artistService.createArtistRest(artist);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Artist> updateArtistRest(@PathVariable(value = "id") Long artistId, @Validated @RequestBody Artist artistDetails) throws DataValidationException {
+        return artistService.updateArtistRest(artistId, artistDetails);
+    }
+
+    @PostMapping("/deletecountries")
+    public ResponseEntity deleteArtistsRest(@Validated @RequestBody List<Artist> artists) {
+        return artistService.deleteArtistsRest(artists);
     }
 }

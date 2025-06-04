@@ -2,6 +2,9 @@ package ru.bmstu.rpo.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,8 +23,8 @@ public class CountryService {
     @Autowired
     CountryRepository countryRepository;
 
-    public List findAllCountries(){
-        return countryRepository.findAll();
+    public Page<Country> getAllCountries(int page, int limit) {
+        return countryRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     public Optional<Country> findById(Long id){

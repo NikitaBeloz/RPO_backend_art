@@ -2,6 +2,7 @@ package ru.bmstu.rpo.controller;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,10 +15,6 @@ import ru.bmstu.rpo.tools.DataValidationException;
 import java.util.List;
 
 @RequestMapping("/api/v1/countries")
-//@CrossOrigin(origins = "http://localhost:3000",
-//        allowedHeaders = "*",
-//        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-//                RequestMethod.DELETE, RequestMethod.OPTIONS})
 @Data
 @RestController
 public class CountryController {
@@ -25,9 +22,9 @@ public class CountryController {
     @Autowired
     CountryService countryService;
 
-    @GetMapping("/")
-    public List findAllCountries() {
-        return countryService.findAllCountries();
+    @GetMapping("")
+    public Page<Country> getAllCountries(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return countryService.getAllCountries(page, limit);
     }
 
     @PostMapping("/create")
@@ -72,4 +69,3 @@ public class CountryController {
         return countryService.deleteCountriesRest(countries);
     }
 }
-

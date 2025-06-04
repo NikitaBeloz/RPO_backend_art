@@ -4,6 +4,7 @@ import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Alert from './Alert';
 import BackendService from "../services/BackendService";
 import { useNavigate } from 'react-router-dom';
+import PaginationComponent from './PaginationComponent';
 
 const CountryListComponent = () => {
     const [message, setMessage] = useState();
@@ -13,6 +14,13 @@ const CountryListComponent = () => {
     const [checkedItems, setCheckedItems] = useState([]);
     const [hidden, setHidden] = useState(false);
     const navigate = useNavigate();
+    const [page, setPage] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
+    const limit = 2;
+
+    const onPageChanged =cp => {
+        refreshCountries(cp - 1)
+    }
 
     const setChecked = (value) => {
         setCheckedItems(Array(countries.length).fill(value));
@@ -42,13 +50,18 @@ const CountryListComponent = () => {
         }
     };
 
-    const refreshCountries = () => {
-        BackendService.retrieveAllCountries()
-            .then((resp) => {
-                setCountries(resp.data);
+    const refreshCountries = (cp = 0) => { // Добавлено значение по умолчанию
+        BackendService.retrieveAllCountries(cp, limit)
+            .then(resp => {
+                setCountries(resp.data.content);
                 setHidden(false);
+                setTotalCount(resp.data.totalElements);
+                setPage(cp);
             })
-            .catch(() => setHidden(true))
+            .catch(() => {
+                setHidden(true);
+                setTotalCount(0);
+            })
             .finally(() => setChecked(false));
     };
 
@@ -94,6 +107,12 @@ const CountryListComponent = () => {
                 </div>
             </div>
             <div className="row my-2 me-0">
+            <PaginationComponent
+                totalRecords={totalCount}
+                pageLimit={limit}
+                currentPage={page}
+                pageNeighbours={1}
+                onPageChanged={onPageChanged} />
                 <table className="table table-sm">
                     <thead className="thead-light">
                         <tr>

@@ -10,6 +10,7 @@ import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Country;
 import ru.bmstu.rpo.entity.Painting;
 import ru.bmstu.rpo.repository.ArtistRepository;
+import ru.bmstu.rpo.tools.DataValidationException;
 
 import java.util.*;
 
@@ -87,5 +88,33 @@ public class ArtistService {
             return ResponseEntity.ok(cc.get().paintings);
         }
         return ResponseEntity.ok(new ArrayList<>());
+    }
+
+    public ResponseEntity<Object> createArtistRest(Artist artist) throws DataValidationException {
+        try {
+            Artist nc = artistRepository.save(artist);
+            return new ResponseEntity<Object>(nc, HttpStatus.OK);
+        }
+        catch(Exception ex) {
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity<Artist> updateArtistRest(Long artistId, Artist artistDetails) throws DataValidationException {
+        try {
+            Artist artist = artistRepository.findById(artistId)
+                    .orElseThrow(() -> new DataValidationException("Артист с таким индексом не найдена"));
+            artist.name = artistDetails.name;
+            artistRepository.save(artist);
+            return ResponseEntity.ok(artist);
+        }
+        catch (Exception ex) {;
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity deleteArtistsRest(List<Artist> artists) {
+        artistRepository.deleteAll(artists);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
