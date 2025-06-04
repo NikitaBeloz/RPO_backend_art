@@ -22,27 +22,27 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public List findAllArtists() {
+    public List findAllUsers() {
         return userService.findAllUsers();
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createArtist(@RequestBody Users users) {
+    public ResponseEntity<Object> createUser(@RequestBody Users users) {
         return userService.createUsers(users);
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Users> updateArtist(@PathVariable(value = "id") Long usersId, @RequestBody Users usersDetails) {
+    public ResponseEntity<Users> updateUser(@PathVariable(value = "id") Long usersId, @RequestBody Users usersDetails) {
         return userService.updateUsers(usersId, usersDetails);
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteArtist(@PathVariable(value = "id") Long usersId) {
+    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long usersId) {
         return userService.deleteUsers(usersId);
     }
 
     @GetMapping("/{id}/paintings")
-    public ResponseEntity<Set<Museum>> getArtistPainting(@PathVariable(value = "id") Long usersId) {
+    public ResponseEntity<Set<Museum>> getUserPainting(@PathVariable(value = "id") Long usersId) {
         return userService.getUsersMuseum(usersId);
     }
 

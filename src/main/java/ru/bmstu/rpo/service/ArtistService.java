@@ -2,6 +2,9 @@ package ru.bmstu.rpo.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,8 +27,8 @@ public class ArtistService {
     @Autowired
     CountryService countryService;
 
-    public List findAllArtists() {
-        return artistRepository.findAll();
+    public Page<Artist> getAllArtists(int page, int limit) {
+        return artistRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     public Optional<Artist> findById(Long id){
@@ -92,8 +95,10 @@ public class ArtistService {
 
     public ResponseEntity<Object> createArtistRest(Artist artist) throws DataValidationException {
         try {
+            Optional<Country> cc = countryService.findById(artist.country.id);
+            cc.ifPresent(country -> artist.country = country);
             Artist nc = artistRepository.save(artist);
-            return new ResponseEntity<Object>(nc, HttpStatus.OK);
+            return ResponseEntity.ok(nc);
         }
         catch(Exception ex) {
             throw new DataValidationException("Неизвестная ошибка");
@@ -102,15 +107,18 @@ public class ArtistService {
 
     public ResponseEntity<Artist> updateArtistRest(Long artistId, Artist artistDetails) throws DataValidationException {
         try {
-            Artist artist = artistRepository.findById(artistId)
-                    .orElseThrow(() -> new DataValidationException("Артист с таким индексом не найдена"));
-            artist.name = artistDetails.name;
-            artistRepository.save(artist);
-            return ResponseEntity.ok(artist);
+            Optional<Artist> cc = Optional.ofNullable(artistRepository.findById(artistId)
+                    .orElseThrow(() -> new DataValidationException("Артист с таким индексом не найдена")));
+            if (cc.isPresent()) {
+                Artist artist = entityForUpdate(artistId, artistDetails);
+                artistRepository.save(artist);
+                return ResponseEntity.ok(artist);
+            }
         }
-        catch (Exception ex) {;
+        catch (Exception ex) {
             throw new DataValidationException("Неизвестная ошибка");
         }
+        return null;
     }
 
     public ResponseEntity deleteArtistsRest(List<Artist> artists) {

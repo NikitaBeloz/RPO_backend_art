@@ -2,6 +2,9 @@ package ru.bmstu.rpo.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import ru.bmstu.rpo.entity.Artist;
 import ru.bmstu.rpo.entity.Museum;
 import ru.bmstu.rpo.entity.Painting;
 import ru.bmstu.rpo.repository.PaintingRepository;
+import ru.bmstu.rpo.tools.DataValidationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +31,8 @@ public class PaintingService {
     @Autowired
     MuseumService museumService;
 
-    public List findAllPainting(){
-        return paintingRepository.findAll();
+    public Page<Painting> getAllPaintings(int page, int limit) {
+        return paintingRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     public Optional<Painting> findById(Long id){
@@ -85,5 +89,41 @@ public class PaintingService {
         Optional<Museum> museum = museumService.findById(painting.museum.id);
         museum.ifPresent(m -> painting.museum = m);
         return painting;
+    }
+
+    public ResponseEntity<Object> createPaintingRest(Painting painting) throws DataValidationException  {
+        try {
+            Optional<Artist> artist = artistService.findById(painting.artist.id);
+            artist.ifPresent(a -> painting.artist = a);
+            Optional<Museum> museum = museumService.findById(painting.museum.id);
+            museum.ifPresent(m -> painting.museum = m);
+            Painting nc = paintingRepository.save(painting);
+            return new ResponseEntity<Object>(nc, HttpStatus.OK);
+        }
+        catch(Exception ex) {
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity<Painting> updatePaintingRest(Long paintingId, Painting paintingDetails) throws DataValidationException {
+        try {
+            Optional<Painting> cc = paintingRepository.findById(paintingId);
+            if (cc.isPresent()) {
+                Painting painting = entityForUpdate(paintingId, paintingDetails);
+                paintingRepository.save(painting);
+                return ResponseEntity.ok(painting);
+            }
+            else {
+                throw new DataValidationException("Картина с таким индексом не найдена");
+            }
+        }
+        catch (Exception ex) {
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity deletePaintingsRest(List<Painting> paintings) {
+        paintingRepository.deleteAll(paintings);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

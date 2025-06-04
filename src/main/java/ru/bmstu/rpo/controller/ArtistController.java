@@ -2,6 +2,7 @@ package ru.bmstu.rpo.controller;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,9 +22,9 @@ public class ArtistController {
     @Autowired
     ArtistService artistService;
 
-    @GetMapping(("/"))
-    public List findAllArtists() {
-        return artistService.findAllArtists();
+    @GetMapping("")
+    public Page<Artist> getAllArtists(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return artistService.getAllArtists(page, limit);
     }
 
     @PostMapping("/create")
