@@ -6,10 +6,10 @@ import BackendService from "../services/BackendService";
 import { useNavigate } from 'react-router-dom';
 import PaginationComponent from './PaginationComponent';
 
-const CountryListComponent = () => {
+const MuseumListComponent = () => {
     const [message, setMessage] = useState();
-    const [countries, setCountries] = useState([]);
-    const [selectedCountries, setSelectedCountries] = useState([]);
+    const [museums, setMuseums] = useState([]);
+    const [selectedMuseums, setSelectedMuseums] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
     const [hidden, setHidden] = useState(false);
@@ -18,12 +18,12 @@ const CountryListComponent = () => {
     const [totalCount, setTotalCount] = useState(0);
     const limit = 2;
 
-    const onPageChanged =cp => {
-        refreshCountries(cp - 1)
-    }
+    const onPageChanged = cp => {
+        refreshMuseums(cp - 1);
+    };
 
     const setChecked = (value) => {
-        setCheckedItems(Array(countries.length).fill(value));
+        setCheckedItems(Array(museums.length).fill(value));
     };
 
     const handleCheckChange = (e) => {
@@ -38,22 +38,22 @@ const CountryListComponent = () => {
         setChecked(e.target.checked);
     };
 
-    const deleteCountriesClicked = () => {
-        const selected = countries.filter((_, idx) => checkedItems[idx]);
+    const deleteMuseumsClicked = () => {
+        const selected = museums.filter((_, idx) => checkedItems[idx]);
         if (selected.length > 0) {
             const msg = selected.length > 1
-                ? `Подтвердите удаление ${selected.length} стран`
-                : `Подтвердите удаление страны ${selected[0].name}`;
+                ? `Подтвердите удаление ${selected.length} музеев`
+                : `Подтвердите удаление музея "${selected[0].name}"`;
             setShowAlert(true);
-            setSelectedCountries(selected);
+            setSelectedMuseums(selected);
             setMessage(msg);
         }
     };
 
-    const refreshCountries = (cp = 0) => {
-        BackendService.retrieveAllCountries(cp, limit)
+    const refreshMuseums = (cp = 0) => {
+        BackendService.retrieveAllMuseums(cp, limit)
             .then(resp => {
-                setCountries(resp.data.content);
+                setMuseums(resp.data.content);
                 setHidden(false);
                 setTotalCount(resp.data.totalElements);
                 setPage(cp);
@@ -66,16 +66,16 @@ const CountryListComponent = () => {
     };
 
     useEffect(() => {
-        refreshCountries();
+        refreshMuseums();
     }, []);
 
-    const updateCountryClicked = (id) => {
-        navigate(`/countries/${id}`);
+    const updateMuseumClicked = (id) => {
+        navigate(`/museums/${id}`);
     };
 
     const onDelete = () => {
-        BackendService.deleteCountries(selectedCountries)
-            .then(() => refreshCountries())
+        BackendService.deleteMuseums(selectedMuseums)
+            .then(() => refreshMuseums())
             .catch(console.error);
     };
 
@@ -83,8 +83,8 @@ const CountryListComponent = () => {
         setShowAlert(false);
     };
 
-    const addCountryClicked = () => {
-        navigate('/countries/new');
+    const addMuseumClicked = () => {
+        navigate('/museums/new');
     };
 
     if (hidden) return null;
@@ -92,31 +92,32 @@ const CountryListComponent = () => {
     return (
         <div className="m-4">
             <div className="row my-2">
-                <h3>Страны</h3>
+                <h3>Музеи</h3>
                 <div className="btn-toolbar">
                     <div className="btn-group ms-auto">
-                        <button className="btn btn-outline-secondary" onClick={addCountryClicked}>
+                        <button className="btn btn-outline-secondary" onClick={addMuseumClicked}>
                             <FontAwesomeIcon icon={faPlus} /> Добавить
                         </button>
                     </div>
                     <div className="btn-group ms-2">
-                        <button className="btn btn-outline-secondary" onClick={deleteCountriesClicked}>
+                        <button className="btn btn-outline-secondary" onClick={deleteMuseumsClicked}>
                             <FontAwesomeIcon icon={faTrash} /> Удалить
                         </button>
                     </div>
                 </div>
             </div>
             <div className="row my-2 me-0">
-            <PaginationComponent
-                totalRecords={totalCount}
-                pageLimit={limit}
-                currentPage={page}
-                pageNeighbours={1}
-                onPageChanged={onPageChanged} />
+                <PaginationComponent
+                    totalRecords={totalCount}
+                    pageLimit={limit}
+                    currentPage={page}
+                    pageNeighbours={1}
+                    onPageChanged={onPageChanged} />
                 <table className="table table-sm">
                     <thead className="thead-light">
                         <tr>
                             <th>Название</th>
+                            <th>Местоположение</th>
                             <th>
                                 <div className="btn-toolbar pb-1">
                                     <div className="btn-group ms-auto">
@@ -127,15 +128,16 @@ const CountryListComponent = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {countries.map((country, index) => (
-                            <tr key={country.id}>
-                                <td>{country.name}</td>
+                        {museums.map((museum, index) => (
+                            <tr key={museum.id}>
+                                <td>{museum.name}</td>
+                                <td>{museum.location}</td>
                                 <td>
                                     <div className="btn-toolbar">
                                         <div className="btn-group ms-auto">
                                             <button
                                                 className="btn btn-outline-secondary btn-sm"
-                                                onClick={() => updateCountryClicked(country.id)}
+                                                onClick={() => updateMuseumClicked(museum.id)}
                                             >
                                                 <FontAwesomeIcon icon={faEdit} fixedWidth />
                                             </button>
@@ -167,4 +169,4 @@ const CountryListComponent = () => {
     );
 };
 
-export default CountryListComponent;
+export default MuseumListComponent;

@@ -92,68 +92,68 @@ class BackendService {
 
     /* Museums */
 
-    retrieveAllArtists(page, limit) {
-        return axios.get(`${API_URL}/museums/`);
+    retrieveAllMuseums(page, limit) {
+        return axios.get(`${API_URL}/museums?page=${page}&limit=${limit}`);
     }
 
-    retrieveArtists(id) {
+    retrieveMuseum(id) {
         return axios.get(`${API_URL}/museums/${id}`);
     }
 
-    createArtists(museum) {
+    createMuseum(museum) {
         return axios.post(`${API_URL}/museums/`, museum);
     }
 
-    updateArtists(museum) {
-        return axios.put(`${API_URL}/museums/${museum.id}`, museum);
+    updateMuseum(id, museum) {
+        return axios.put(`${API_URL}/museums/${id}`, museum);
     }
 
-    deleteArtists(museums) {
+    deleteMuseums(museums) {
         return axios.post(`${API_URL}/museums/deletemuseums`, museums);
     }
 
     /* Paintings */
 
-    retrieveAllArtists(page, limit) {
-        return axios.get(`${API_URL}/paintings/`);
+    retrieveAllPaintings(page, limit) {
+        return axios.get(`${API_URL}/paintings?page=${page}&limit=${limit}`);
     }
 
-    retrieveArtists(id) {
+    retrievePainting(id) {
         return axios.get(`${API_URL}/paintings/${id}`);
     }
 
-    createArtists(painting) {
+    createPainting(painting) {
         return axios.post(`${API_URL}/paintings/`, painting);
     }
 
-    updateArtists(painting) {
-        return axios.put(`${API_URL}/paintings/${painting.id}`, painting);
+    updatePainting(id, painting) {
+        return axios.put(`${API_URL}/paintings/${id}`, painting);
     }
 
-    deleteArtists(paintings) {
-        return axios.post(`${API_URL}/museums/deletepaintings`, paintings);
+    deletePaintings(paintings) {
+        return axios.post(`${API_URL}/paintings/deletepaintings`, paintings);
     }
 
     /* Users */
 
-    retrieveAllArtists(page, limit) {
-        return axios.get(`${API_URL}/users/`);
+    retrieveAllUsers(page, limit) {
+        return axios.get(`${API_URL}/users?page=${page}&limit=${limit}`);
     }
 
-    retrieveArtists(id) {
+    retrieveUser(id) {
         return axios.get(`${API_URL}/users/${id}`);
     }
 
-    createArtists(user) {
+    createUser(user) {
         return axios.post(`${API_URL}/users/`, user);
     }
 
-    updateArtists(user) {
-        return axios.put(`${API_URL}/users/${user.id}`, user);
+    updateUser(id, user) {
+        return axios.put(`${API_URL}/users/${id}`, user);
     }
 
-    deleteArtists(users) {
-        return axios.post(`${API_URL}/museums/deleteusers`, users);
+    deleteUsers(users) {
+        return axios.post(`${API_URL}/users/deleteusers`, users);
     }
 }
 
