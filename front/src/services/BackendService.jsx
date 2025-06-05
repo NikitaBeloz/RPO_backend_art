@@ -89,6 +89,72 @@ class BackendService {
     deleteArtists(artists) {
         return axios.post(`${API_URL}/artists/deleteartists`, artists);
     }
+
+    /* Museums */
+
+    retrieveAllArtists(page, limit) {
+        return axios.get(`${API_URL}/museums/`);
+    }
+
+    retrieveArtists(id) {
+        return axios.get(`${API_URL}/museums/${id}`);
+    }
+
+    createArtists(museum) {
+        return axios.post(`${API_URL}/museums/`, museum);
+    }
+
+    updateArtists(museum) {
+        return axios.put(`${API_URL}/museums/${museum.id}`, museum);
+    }
+
+    deleteArtists(museums) {
+        return axios.post(`${API_URL}/museums/deletemuseums`, museums);
+    }
+
+    /* Paintings */
+
+    retrieveAllArtists(page, limit) {
+        return axios.get(`${API_URL}/paintings/`);
+    }
+
+    retrieveArtists(id) {
+        return axios.get(`${API_URL}/paintings/${id}`);
+    }
+
+    createArtists(painting) {
+        return axios.post(`${API_URL}/paintings/`, painting);
+    }
+
+    updateArtists(painting) {
+        return axios.put(`${API_URL}/paintings/${painting.id}`, painting);
+    }
+
+    deleteArtists(paintings) {
+        return axios.post(`${API_URL}/museums/deletepaintings`, paintings);
+    }
+
+    /* Users */
+
+    retrieveAllArtists(page, limit) {
+        return axios.get(`${API_URL}/users/`);
+    }
+
+    retrieveArtists(id) {
+        return axios.get(`${API_URL}/users/${id}`);
+    }
+
+    createArtists(user) {
+        return axios.post(`${API_URL}/users/`, user);
+    }
+
+    updateArtists(user) {
+        return axios.put(`${API_URL}/users/${user.id}`, user);
+    }
+
+    deleteArtists(users) {
+        return axios.post(`${API_URL}/museums/deleteusers`, users);
+    }
 }
 
 export default new BackendService()

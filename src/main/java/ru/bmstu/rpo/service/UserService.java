@@ -2,6 +2,9 @@ package ru.bmstu.rpo.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.bmstu.rpo.entity.Museum;
 import ru.bmstu.rpo.entity.Users;
 import ru.bmstu.rpo.repository.UserRepository;
+import ru.bmstu.rpo.tools.DataValidationException;
 
 import java.util.*;
 
@@ -22,8 +26,8 @@ public class UserService {
     @Autowired
     MuseumService museumService;
 
-    public List findAllUsers() {
-        return userRepository.findAll();
+    public Page<Users> getAllUsers(int page, int limit) {
+        return userRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     public Optional<Users> findById(Long id){
@@ -117,5 +121,35 @@ public class UserService {
         Map<String, String> response = new HashMap<>();
         response.put("count", String.valueOf(cnt));
         return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<Object> createUsersRest(Users users) throws DataValidationException {
+        try {
+            Users nc = userRepository.save(users);
+            return ResponseEntity.ok(nc);
+        }
+        catch(Exception ex) {
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+    }
+
+    public ResponseEntity<Users> updateUsersRest(Long usersId, Users usersDetails) throws DataValidationException {
+        try {
+            Optional<Users> cc = userRepository.findById(usersId);
+            if (cc.isPresent()) {
+                Users users = entityForUpdate(usersId, usersDetails);
+                userRepository.save(users);
+                return ResponseEntity.ok(users);
+            }
+        }
+        catch (Exception ex) {
+            throw new DataValidationException("Неизвестная ошибка");
+        }
+        return null;
+    }
+
+    public ResponseEntity deleteUsersRest(List<Users> users) {
+        userRepository.deleteAll(users);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

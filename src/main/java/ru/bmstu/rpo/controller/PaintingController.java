@@ -59,7 +59,7 @@ public class PaintingController {
         return paintingService.updatePaintingRest(paintingId, paintingDetails);
     }
 
-    @PostMapping("/deletecountries")
+    @PostMapping("/deletepaintings")
     public ResponseEntity deletePaintingsRest(@Validated @RequestBody List<Painting> paintings) {
         return paintingService.deletePaintingsRest(paintings);
     }

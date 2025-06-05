@@ -64,7 +64,7 @@ public class ArtistController {
         return artistService.updateArtistRest(artistId, artistDetails);
     }
 
-    @PostMapping("/deletecountries")
+    @PostMapping("/deleteartists")
     public ResponseEntity deleteArtistsRest(@Validated @RequestBody List<Artist> artists) {
         return artistService.deleteArtistsRest(artists);
     }
