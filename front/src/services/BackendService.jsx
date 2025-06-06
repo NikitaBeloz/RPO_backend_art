@@ -71,7 +71,7 @@ class BackendService {
     /* Artists */
 
     retrieveAllArtists(page, limit) {
-        return axios.get(`${API_URL}/artists/`);
+        return axios.get(`${API_URL}/artists?page=${page}&limit=${limit}`);
     }
 
     retrieveArtists(id) {

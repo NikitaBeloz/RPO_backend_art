@@ -27,7 +27,7 @@ public class UserService {
     MuseumService museumService;
 
     public Page<Users> getAllUsers(int page, int limit) {
-        return userRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
+        return userRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "login")));
     }
 
     public Optional<Users> findById(Long id){
